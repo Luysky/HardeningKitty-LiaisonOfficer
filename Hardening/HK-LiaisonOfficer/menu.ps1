@@ -3,7 +3,8 @@ param (
     	[string]$date = $(Get-Date -Format "MM-dd-yyyy-HHmm-"),
     	[string]$list = "no selection",
     	[string]$hardenList = "no selection",
-    	[string]$scanList = "no selection"
+    	[string]$scanList = "no selection",
+	[string]$user = $( Read-Host "Input Username, please" )
 )
 
 function Show-Menu
@@ -26,42 +27,42 @@ function Show-Menu
 function Scan
 {
     Set-ExecutionPolicy Bypass -Force
-    Set-Location C:\Users\Administrator\Hardening\HardeningKitty
-    Import-Module C:\Users\Administrator\Hardening\HardeningKitty\Invoke-HardeningKitty.ps1 -Force
+    Set-Location C:\Users\$user\Hardening\HardeningKitty
+    Import-Module C:\Users\$user\Hardening\HardeningKitty\Invoke-HardeningKitty.ps1 -Force
 
-    Get-ChildItem -Path C:\Users\Administrator\Hardening\HardeningKitty\lists -Name
+    Get-ChildItem -Path C:\Users\$user\Hardening\HardeningKitty\lists -Name
     Write-Host "`n"
 
     Write-Host "Please write the name of the desired finding list followed by .csv"
     $scanList = Read-Host
 
-    Set-Location C:\Users\Administrator\Hardening\HardeningKitty
+    Set-Location C:\Users\$user\Hardening\HardeningKitty
     Invoke-HardeningKitty -FileFindingList .\lists\$scanList
 
     pause
 
-    Set-Location C:\Users\Administrator\Hardening
+    Set-Location C:\Users\$user\Hardening
 }
 
 function Harden
 {
     Set-ExecutionPolicy Bypass -Force
-    Set-Location C:\Users\Administrator\Hardening\HardeningKitty
-    Import-Module C:\Users\Administrator\Hardening\HardeningKitty\Invoke-HardeningKitty.ps1 -Force
+    Set-Location C:\Users\$user\Hardening\HardeningKitty
+    Import-Module C:\Users\$user\Hardening\HardeningKitty\Invoke-HardeningKitty.ps1 -Force
 
 
-    Get-ChildItem -Path C:\Users\Administrator\Hardening\HardeningKitty\lists -Name
+    Get-ChildItem -Path C:\Users\$user\Hardening\HardeningKitty\lists -Name
     Write-Host "`n"
 
     Write-Host "Please write the name of the desired finding list followed by .csv"
     $hardenList = Read-Host
 
-    Set-Location C:\Users\Administrator\Hardening\HardeningKitty
+    Set-Location C:\Users\$user\Hardening\HardeningKitty
     Invoke-HardeningKitty -Mode HailMary -Log -Report -FileFindingList .\lists\$hardenList
 
     pause
 
-    Set-Location C:\Users\Administrator\Hardening
+    Set-Location C:\Users\$user\Hardening
 }
 
 
@@ -78,22 +79,22 @@ function Audit
     )
 
     Set-ExecutionPolicy Bypass -Force
-    Set-Location C:\Users\Administrator\Hardening\HardeningKitty
+    Set-Location C:\Users\$user\Hardening\HardeningKitty
 
-    Import-Module C:\Users\Administrator\Hardening\HardeningKitty\Invoke-HardeningKitty.ps1 -Force
+    Import-Module C:\Users\$user\Hardening\HardeningKitty\Invoke-HardeningKitty.ps1 -Force
 
-    Get-ChildItem -Path C:\Users\Administrator\Hardening\HardeningKitty\lists -Name
+    Get-ChildItem -Path C:\Users\$user\Hardening\HardeningKitty\lists -Name
     Write-Host "`n"
 
     Write-Host "Please write the name of the desired finding list followed by .csv"
     $list = Read-Host
 
-    Set-Location C:\Users\Administrator\Hardening\HardeningKitty
+    Set-Location C:\Users\$user\Hardening\HardeningKitty
     Invoke-HardeningKitty -FileFindingList .\lists\$list -Mode Audit -Log -Report -LogFile .\logsNreports\$log.txt -ReportFile .\logsNreports\$report.csv
 
     pause
 
-    Set-Location C:\Users\Administrator\Hardening
+    Set-Location C:\Users\$user\Hardening
 }
 
 
@@ -106,15 +107,15 @@ function Backup
     )
 
     Set-ExecutionPolicy Bypass -Force
-    Set-Location C:\Users\Administrator\Hardening\HardeningKitty
+    Set-Location C:\Users\$user\Hardening\HardeningKitty
 
-    Import-Module C:\Users\Administrator\Hardening\HardeningKitty\Invoke-HardeningKitty.ps1 -Force
-    Invoke-HardeningKitty -Mode Config -Backup -BackupFile C:\Users\Administrator\Hardening\HardeningKitty\backups\$backup.csv
+    Import-Module C:\Users\$user\Hardening\HardeningKitty\Invoke-HardeningKitty.ps1 -Force
+    Invoke-HardeningKitty -Mode Config -Backup -BackupFile C:\Users\$user\Hardening\HardeningKitty\backups\$backup.csv
 
-    Set-Location C:\Users\Administrator\Hardening\HardeningKitty
-    Copy-Item -Path ".\backups\$backup.csv" -Destination "C:\Users\Administrator\Hardening\HardeningKitty\lists\$backup.csv"
+    Set-Location C:\Users\$user\Hardening\HardeningKitty
+    Copy-Item -Path ".\backups\$backup.csv" -Destination "C:\Users\$user\Hardening\HardeningKitty\lists\$backup.csv"
 
-    Set-Location C:\Users\Administrator\Hardening\
+    Set-Location C:\Users\$user\Hardening\
 }
 
 function Export
@@ -127,10 +128,10 @@ function Export
     Write-Host "Loading HardeningKitty Liaison Officer in progress"
 
     Write-Host "Export logsNReports"
-    scp -r .\HardeningKitty\logsNreports "${user}@${ipAddress}:c:/users/administrator/Hardening-Reports"
+    scp -r .\HardeningKitty\logsNreports "${user}@${ipAddress}:c:/users/$user/Hardening-Reports"
 
     Write-Host "Export backups"
-    scp -r .\HardeningKitty\backups "${user}@${ipAddress}:c:/users/administrator/Hardening-Backups"
+    scp -r .\HardeningKitty\backups "${user}@${ipAddress}:c:/users/$user/Hardening-Backups"
 
     Write-Host "*******************************************"
     Write-Host "Logs, reports and backups transfered"
@@ -172,7 +173,7 @@ do
      }
 
      if($selection -ne '0') {		
-     Remove-Variable * -ErrorAction SilentlyContinue; Remove-Module *; $error.Clear(); 
+     Remove-Variable -Name selection -ErrorAction SilentlyContinue; Remove-Module *; $error.Clear(); 
      Clear-Host
      }
 

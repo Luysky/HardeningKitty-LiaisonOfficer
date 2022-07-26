@@ -4,7 +4,7 @@ param (
  )
 
 Write-Host "Loading HardeningKitty Liaison Officer in progress"
-scp -r .\HK-LiaisonOfficer "${user}@${ipAddress}:c:/users/administrator/Hardening"
+scp -r .\HK-LiaisonOfficer "${user}@${ipAddress}:c:/users/$user/Hardening"
 
 Write-Host "`n"
 Write-Host "*******************************************"
